@@ -3,8 +3,8 @@ $fn = 100;
 
 // Tube parameters
 
-R_in_small = 9.65;  // Radius of small circles
-R_in_big = 100;    // Radius of big circle
+R_in_small = 9.55;  // Radius of small circles
+R_in_big = 85;    // Radius of big circle
 
 Dist_center = 45 - 2*R_in_small;  // Distance of centers of small circles
 
@@ -39,17 +39,17 @@ Balc_height = 25;
     bolt_diameter = 3.2;
     head_height   = 3;
     head_diameter = 6.6;
-    nut_height    = 2.7;
-    nut_diameter  = 6.6;
-    nut_pocket    = 6.6;
+    nut_height    = 0; // 2.7;
+    nut_diameter  = 0;  // 6.6;
+    nut_pocket    = 0;  // 6.6;
     
     length = 35;
-    pocket_size = 35;
+    pocket_size = 0;  // 35;
     global_clearance = 0.2;
  
     protrution_thickness = 11;
     protrution_length = 10;
-    protrution_height = 10;
+    protrution_height = 5;
 
 
 
