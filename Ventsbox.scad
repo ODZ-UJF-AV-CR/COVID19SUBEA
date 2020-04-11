@@ -1,4 +1,4 @@
-//// 
+//// Box for filters
 $fn = 100;
 
 // Partition parameters
@@ -183,14 +183,15 @@ Partition(Dist_in_walls, Wall_in_thickness, R_out, H_box);
 } 
 
 
+// Side of inlet pipe
+translate([ -Dist_in_walls/2, -T_box/2 + Frame_transl , 0])
+   cube([Dist_in_walls, 2, H_box]);
+
 // Mesh
 FIRST_ROW = 30;
 MESH_HEIGHT = 10;
 MESH_WIDTH = 2.5;
 MESH_DIST = 7;
-
-translate([ -Dist_in_walls/2, -T_box/2 + Frame_transl , 0])
-   cube([Dist_in_walls, 2, H_box]);
 
 difference()
 {
@@ -198,12 +199,12 @@ difference()
         cube([W_box, 2, H_box]);
     for (x = [Dist_in_walls/2:MESH_DIST:W_box/2 - 10] )
         for (z = [FIRST_ROW:12:H_box-20] )
-            translate([x, -T_box/2 + Frame_transl - MESH_HEIGHT, z]) 
-                cube([MESH_WIDTH,20,MESH_HEIGHT]);
+            translate([x, -T_box/2 + Frame_transl - 0.1, z]) 
+                cube([MESH_WIDTH,2.1,MESH_HEIGHT]);
     for (x = [Dist_in_walls/2:-MESH_DIST:-W_box/2 + 10] )
         for (z = [FIRST_ROW:12:H_box-20] )
-            translate([x, -T_box/2 + Frame_transl - MESH_HEIGHT, z]) 
-                cube([MESH_WIDTH,20,MESH_HEIGHT]);
+            translate([x, -T_box/2 + Frame_transl - 0.1, z]) 
+                cube([MESH_WIDTH,2.1,MESH_HEIGHT]);
 }
 
 /// Frame
@@ -218,8 +219,10 @@ translate([-0.3, -11.5,-7])
   // Holes for screws 
     translate([12.4, -3,0])
    translate([14,11.4,-1])     
-   cylinder(h = 10, r = 1.6);
-    
+   {
+    cylinder(h = 10, r = 1.6);
+   }
+   
     mirror([1,0,0]){
    translate([12.4, -3,0])
    translate([14,11.4,-1])     
@@ -229,7 +232,7 @@ translate([-0.3, -11.5,-7])
 
     }
 
- /// Dividing planes
+/// Dividing planes
 difference(){
 intersection(){ 
 union(){    
@@ -255,8 +258,25 @@ union(){
 translate([0,0,  H_box/2])
  cube([Dist_in_walls-2*Wall_in_thickness, T_box+5, H_box], center = true);
  }
+
+/// Holders for nuts 
  
- 
+translate([12.4, -3,0])
+translate([14,11.4,Wall_frame_thick])     
+{
+    difference(){
+        translate([0,0,1]) cube([10,10,2], center = true);
+        cylinder(4, 6.2/2, 6.2/2, $fn=6);
+    }
+}
+mirror([1,0,0]){
+    translate([12.4, -3,0])
+    translate([14,11.4,Wall_frame_thick])     
+    difference(){
+        translate([0,0,1]) cube([10,10,2], center = true);
+        cylinder(4, 6.2/2, 6.2/2, $fn=6);
+    }
+}
 
  
  
