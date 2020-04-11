@@ -13,6 +13,7 @@ W_box = 145;   // Width of the box
 H_box = 102;    // Height of the box
 
 Wall_frame_thick = 6;  // Thickness of the frame wall
+Frame_transl = 1.5; // Translate of the frame
 
 
 // Valve plane parameters
@@ -32,7 +33,16 @@ alpha = atan(tanalpha);
 tanbeta = (H_box-2*Wall_frame_thick)/(W_box/2-Dist_in_walls/2-Wall_frame_thick);
 beta = atan(tanbeta);
 
+/// Side protrution for screws
 
+    bolt_diameter = 3.2;
+ 
+    protrution_thickness = 11;
+    protrution_length = 10;
+    protrution_height = 5;
+    
+// Balcony
+Balc_height = 25;
 
 
 module Partition(Dist_in_walls, Wall_in_thickness, R_out, H_tube){
@@ -121,15 +131,45 @@ module Paw(h){
      translate([12.5,12.5,-1])   
      cylinder(h = 100, r = 1.6);
     }
-}    
+}  
 
+module Screw_protrution(protrution_length, protrution_height, protrution_thickness, bolt_diameter){
+    
+ difference(){
+cube([protrution_length, protrution_height, protrution_thickness]);
+     
+    translate([protrution_length/2, 0, protrution_thickness/2])
+    rotate([90,0,0]) {
+        
+    translate([0,0,- protrution_height/2])
+    cylinder(r = bolt_diameter/2, h = protrution_height + 1, center = true);
+     
+    }
+    
+    }   
+    
+    }
+    
+module Balcony(W_box, T_box, Balc_height, Wall_frame_thick){
+ difference(){
+    cube([W_box, T_box, Balc_height + 2* Wall_frame_thick], center = true);
+    
+     translate([0, T_box/2+2, -Wall_frame_thick +1])
+        rotate([-37,0,0])
+        cube([W_box, T_box, 3*(Balc_height + 2* Wall_frame_thick)], center = true);
+    }
+    
+    }
+//
+//
+    
 /// Part with valves
 rotate([0,180,0])    
 translate([-0.3, -11.5, -zsize])
 valve(zsize);
 
 /// Middle partition
-translate([0,1.5,-0])
+translate([0,Frame_transl,-0])
 difference(){
 Partition(Dist_in_walls, Wall_in_thickness, R_out, H_box); 
   
@@ -141,6 +181,30 @@ Partition(Dist_in_walls, Wall_in_thickness, R_out, H_box);
       cube([Dist_in_walls+3,T_box,0.5]);
       }  
 } 
+
+
+// Mesh
+FIRST_ROW = 30;
+MESH_HEIGHT = 10;
+MESH_WIDTH = 2.5;
+MESH_DIST = 7;
+
+translate([ -Dist_in_walls/2, -T_box/2 + Frame_transl , 0])
+   cube([Dist_in_walls, 2, H_box]);
+
+difference()
+{
+    translate([ -W_box/2, -T_box/2 + Frame_transl , 0]) 
+        cube([W_box, 2, H_box]);
+    for (x = [Dist_in_walls/2:MESH_DIST:W_box/2 - 10] )
+        for (z = [FIRST_ROW:12:H_box-20] )
+            translate([x, -T_box/2 + Frame_transl - MESH_HEIGHT, z]) 
+                cube([MESH_WIDTH,20,MESH_HEIGHT]);
+    for (x = [Dist_in_walls/2:-MESH_DIST:-W_box/2 + 10] )
+        for (z = [FIRST_ROW:12:H_box-20] )
+            translate([x, -T_box/2 + Frame_transl - MESH_HEIGHT, z]) 
+                cube([MESH_WIDTH,20,MESH_HEIGHT]);
+}
 
 /// Frame
 difference(){
@@ -184,32 +248,122 @@ union(){
  }
  }
  }
- translate([0,1.5, H_box/2])
+ translate([0,Frame_transl, H_box/2])
  cube([W_box, T_box, H_box], center = true);
  
  }
 translate([0,0,  H_box/2])
  cube([Dist_in_walls-2*Wall_in_thickness, T_box+5, H_box], center = true);
  }
-/*translate([-Dist_in_walls/2, - T_box/2+1.5, H_box - Wall_frame_thick])
-rotate([0,180+90-beta,0])
-rotate([-alpha,0,0])
-translate([-H_box,0,0])
-cube([2*H_box,Div_thick ,2*H_box]); */
-    
-    
-    
-    
-    
-    
-/*hull(){
-  translate([-W_box/2,  T_box/2+0.1, Wall_frame_thick-0.5])
-      cube([W_box/2-Dist_in_walls/2,1.4,0.5]);
  
- hull(){
-     translate([-Dist_in_walls/2, - T_box/2+1.4+0.1, H_box - Wall_frame_thick-0.0])
-      cube([0.5,1.4,0.5]);
-     translate([-W_box/2 + Wall_frame_thick, T_box/2, H_box - Wall_frame_thick-0.0])
-      cube([0.5,1.4,0.5]);
-     }   
- } */
+ 
+
+ 
+ 
+ 
+ /// Side protrutions for screws
+
+translate([W_box/2, T_box/2- protrution_height +Frame_transl, 0])
+Screw_protrution(protrution_length, protrution_height, protrution_thickness, bolt_diameter);
+ 
+translate([W_box/2, T_box/2- protrution_height+Frame_transl,  H_box - protrution_thickness]){
+Screw_protrution(protrution_length, protrution_height, protrution_thickness, bolt_diameter);
+
+translate([protrution_length/2, protrution_height/2, -14/2])
+rotate(-90)
+Balcony(protrution_height, protrution_length, 14, 0);
+    }
+
+mirror([1,0,0]){
+ translate([W_box/2, T_box/2- protrution_height +Frame_transl, 0])
+Screw_protrution(protrution_length, protrution_height, protrution_thickness, bolt_diameter);
+ 
+translate([W_box/2, T_box/2- protrution_height+Frame_transl,  H_box - protrution_thickness]){
+Screw_protrution(protrution_length, protrution_height, protrution_thickness, bolt_diameter);
+
+translate([protrution_length/2, protrution_height/2, -14/2])
+rotate(-90)
+Balcony(protrution_height, protrution_length, 14, 0);
+    }    
+    
+    }
+    
+/// Balcony
+ difference(){
+translate([0, Frame_transl, H_box  - (Balc_height -  Wall_frame_thick)-1])
+Balcony(W_box, T_box, Balc_height, Wall_frame_thick);
+
+X = W_box-Dist_in_walls/2;
+Y = T_box+5;
+Z = Balc_height+15;
+ 
+ difference(){  
+  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y, H_box  -   2*Wall_frame_thick - Z])
+  rotate([17,0,0])
+    translate([0,9.8,0])
+    rotate(20)
+  cube([W_box-Dist_in_walls/2,Y, Z]);  
+    
+     translate([0,0,  H_box/2])
+ cube([Dist_in_walls-2*Wall_in_thickness, T_box+5, H_box], center = true);
+     
+    }
+   
+mirror([1,0,0]){
+   difference(){  
+  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y, H_box  -   2*Wall_frame_thick - Z])
+  rotate([17,0,0])
+    translate([0,9.8,0])
+    rotate(20)
+  cube([W_box-Dist_in_walls/2,Y, Z]);  
+    
+     translate([0,0,  H_box/2])
+ cube([Dist_in_walls-2*Wall_in_thickness, T_box+5, H_box], center = true);
+     
+    } 
+} 
+
+}
+
+
+intersection(){
+rotate(180)    
+translate([0, -Frame_transl, H_box  - (Balc_height -  Wall_frame_thick)-1])
+Balcony(W_box, T_box, Balc_height, Wall_frame_thick);
+
+X = W_box-Dist_in_walls/2;
+Y = T_box+5;
+Z = Balc_height+15;
+
+union(){ 
+ difference(){  
+  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y+4, H_box  -   2*Wall_frame_thick - Z-2])
+  rotate([16,0,0])
+    translate([0,9.8,0])
+    rotate(13)
+  cube([W_box-Dist_in_walls/2,Y, Z]);  
+    
+     translate([0,0,  H_box/2])
+ cube([Dist_in_walls-2*Wall_in_thickness, T_box+5, H_box], center = true);
+     
+    }
+   
+mirror([1,0,0]){
+difference(){  
+  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y+4, H_box  -   2*Wall_frame_thick - Z-2])
+  rotate([16,0,0])
+    translate([0,9.8,0])
+    rotate(13)
+  cube([W_box-Dist_in_walls/2,Y, Z]);  
+    
+     translate([0,0,  H_box/2])
+ cube([Dist_in_walls-2*Wall_in_thickness, T_box+5, H_box], center = true);
+     
+    }
+} 
+}
+}
+
+
+
+
