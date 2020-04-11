@@ -260,13 +260,14 @@ translate([0,0,  H_box/2])
  }
 
 /// Holders for nuts 
+NUTS_DIAMETER = 6.6;
  
 translate([12.4, -3,0])
 translate([14,11.4,Wall_frame_thick])     
 {
     difference(){
         translate([0,0,1]) cube([10,10,2], center = true);
-        cylinder(4, 6.2/2, 6.2/2, $fn=6);
+        cylinder(4, NUTS_DIAMETER/2, NUTS_DIAMETER/2, $fn=6);
     }
 }
 mirror([1,0,0]){
@@ -274,7 +275,7 @@ mirror([1,0,0]){
     translate([14,11.4,Wall_frame_thick])     
     difference(){
         translate([0,0,1]) cube([10,10,2], center = true);
-        cylinder(4, 6.2/2, 6.2/2, $fn=6);
+        cylinder(4, NUTS_DIAMETER/2, NUTS_DIAMETER/2, $fn=6);
     }
 }
 
