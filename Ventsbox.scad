@@ -1,4 +1,4 @@
-//// Box for filters
+//// 
 $fn = 100;
 
 // Partition parameters
@@ -182,7 +182,6 @@ Partition(Dist_in_walls, Wall_in_thickness, R_out, H_box);
       }  
 } 
 
-
 // Side of inlet pipe
 translate([ -Dist_in_walls/2, -T_box/2 + Frame_transl , 0])
    cube([Dist_in_walls, 2, H_box]);
@@ -219,10 +218,8 @@ translate([-0.3, -11.5,-7])
   // Holes for screws 
     translate([12.4, -3,0])
    translate([14,11.4,-1])     
-   {
-    cylinder(h = 10, r = 1.6);
-   }
-   
+   cylinder(h = 10, r = 1.6);
+    
     mirror([1,0,0]){
    translate([12.4, -3,0])
    translate([14,11.4,-1])     
@@ -232,7 +229,7 @@ translate([-0.3, -11.5,-7])
 
     }
 
-/// Dividing planes
+ /// Dividing planes
 difference(){
 intersection(){ 
 union(){    
@@ -243,7 +240,8 @@ union(){
       square([W_box/2-Dist_in_walls/2+7,1.5]);
  }
 
-   mirror([1,0,0]){    rotate([-1.5,0,0])   
+   mirror([1,0,0]){    
+    rotate([-1.5,0,0])   
  translate([-W_box/2,  T_box/2-0.1, Wall_frame_thick])
  linear_extrude(height = H_box-Wall_frame_thick-1, twist = alpha, slices = 120) {   
  
@@ -258,7 +256,8 @@ union(){
 translate([0,0,  H_box/2])
  cube([Dist_in_walls-2*Wall_in_thickness, T_box+5, H_box], center = true);
  }
-
+ 
+ 
 /// Holders for nuts 
 NUTS_DIAMETER = 6.6;
  
@@ -267,7 +266,7 @@ translate([14,11.4,Wall_frame_thick])
 {
     difference(){
         translate([0,0,1]) cube([10,10,2], center = true);
-        cylinder(4, NUTS_DIAMETER/2, NUTS_DIAMETER/2, $fn=6);
+        translate([0,0,-0.01]) cylinder(4, NUTS_DIAMETER/2, NUTS_DIAMETER/2, $fn=6);
     }
 }
 mirror([1,0,0]){
@@ -275,10 +274,9 @@ mirror([1,0,0]){
     translate([14,11.4,Wall_frame_thick])     
     difference(){
         translate([0,0,1]) cube([10,10,2], center = true);
-        cylinder(4, NUTS_DIAMETER/2, NUTS_DIAMETER/2, $fn=6);
+        translate([0,0,-0.01]) cylinder(4, NUTS_DIAMETER/2, NUTS_DIAMETER/2, $fn=6);
     }
 }
-
  
  
  
@@ -310,19 +308,20 @@ Balcony(protrution_height, protrution_length, 14, 0);
     }
     
 /// Balcony
+  
  difference(){
 translate([0, Frame_transl, H_box  - (Balc_height -  Wall_frame_thick)-1])
 Balcony(W_box, T_box, Balc_height, Wall_frame_thick);
 
 X = W_box-Dist_in_walls/2;
-Y = T_box+5;
+Y = T_box+10;
 Z = Balc_height+15;
  
  difference(){  
-  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y, H_box  -   2*Wall_frame_thick - Z])
+  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y-0.5, H_box  -   2*Wall_frame_thick - Z])
   rotate([17,0,0])
     translate([0,9.8,0])
-    rotate(20)
+    rotate(21)
   cube([W_box-Dist_in_walls/2,Y, Z]);  
     
      translate([0,0,  H_box/2])
@@ -353,15 +352,15 @@ translate([0, -Frame_transl, H_box  - (Balc_height -  Wall_frame_thick)-1])
 Balcony(W_box, T_box, Balc_height, Wall_frame_thick);
 
 X = W_box-Dist_in_walls/2;
-Y = T_box+5;
+Y = T_box+15;
 Z = Balc_height+15;
 
 union(){ 
  difference(){  
-  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y+4, H_box  -   2*Wall_frame_thick - Z-2])
-  rotate([16,0,0])
+  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y-5, H_box  -   2*Wall_frame_thick - Z+9])
+  rotate([1,0,0])
     translate([0,9.8,0])
-    rotate(13)
+    rotate(18)
   cube([W_box-Dist_in_walls/2,Y, Z]);  
     
      translate([0,0,  H_box/2])
@@ -370,11 +369,11 @@ union(){
     }
    
 mirror([1,0,0]){
-difference(){  
-  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y+4, H_box  -   2*Wall_frame_thick - Z-2])
-  rotate([16,0,0])
+ difference(){  
+  translate([Dist_in_walls/2, -T_box/2 + Frame_transl-Y-5, H_box  -   2*Wall_frame_thick - Z+9])
+  rotate([1,0,0])
     translate([0,9.8,0])
-    rotate(13)
+    rotate(18)
   cube([W_box-Dist_in_walls/2,Y, Z]);  
     
      translate([0,0,  H_box/2])
@@ -385,6 +384,6 @@ difference(){
 }
 }
 
-
-
+/*
+*/
 
